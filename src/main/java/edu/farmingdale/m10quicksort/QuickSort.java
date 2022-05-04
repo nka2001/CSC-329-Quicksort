@@ -32,66 +32,87 @@ public class QuickSort<T extends Comparable<T>> implements SortTestable<T> {
     private void quickSort(T theData[], int firstIndex, int lastIndex) {
 
         if (firstIndex < lastIndex) {
-            
-            int partiton = partition(theData, firstIndex, lastIndex);
-            quickSort(theData, firstIndex, partiton - 1);
-            quickSort(theData, partiton + 1, lastIndex);
+
+            int partiton = partition(theData, firstIndex, lastIndex);//get the partition location to pass in the recursive calls
+            quickSort(theData, firstIndex, partiton - 1);//recursivly sort left side
+            quickSort(theData, partiton + 1, lastIndex);//recursivly sort right side 
         }
 
     } // quickSort()
 
- private int partition(T theData[], int firstIndex, int lastIndex)
-    {
-        T pivot = theData[firstIndex];
-        int firstBig = firstIndex;
-        for (int i = firstIndex; i <= lastIndex; i++)
-        {
-            if(pivot.compareTo(theData[i]) >= 0 )
-            {
+    /**
+     * this is lumotos partition algorithm, helps partition theData array
+     *
+     * @param theData
+     * @param firstIndex
+     * @param lastIndex
+     * @return
+     */
+    private int partition(T theData[], int firstIndex, int lastIndex) {
+        T pivot = theData[firstIndex];//the pivot is always going to be at first index
+        int firstBig = firstIndex;//firstbig moves as we move through the array
+        for (int i = firstIndex; i <= lastIndex; i++) {
+            if (pivot.compareTo(theData[i]) >= 0) {//if the pivot value is greater than the data at i, we swap it
                 swap(theData, firstBig, i);
                 firstBig++;
-                
-                
-            } 
-        } 
-       
-        swap(theData, firstBig - 1,firstIndex);
-       
-        
-        
-        return firstBig-1;//what to return ;
-        
+
+            }
+        }
+
+        swap(theData, firstBig - 1, firstIndex);//finally, pivot is swapped with "last small" or firstbig - 1
+
+        return firstBig - 1;//return the location of the pivot
+
     }
 
+    /**
+     * normal swap method, used by partition, and median methods 
+     * @param theData
+     * @param i
+     * @param j 
+     */
     private void swap(T theData[], int i, int j) {
         T temp = theData[i];
         theData[i] = theData[j];
         theData[j] = temp;
     }
 
+    /**
+     * median of three approach for choosing pivot for quicksort 
+     * @param theData
+     * @param begin
+     * @param end 
+     */
     private void median(T theData[], int begin, int end) {
-        
-        int middle = (begin + end) / 2;
-        
-        if(theData[begin].compareTo(theData[middle]) < 0 && theData[middle].compareTo(theData[end]) < 0){
+
+        int middle = (begin + end) / 2;//get the center for median of three
+        /*
+        a = begin
+        b = middle
+        c = end
+         */
+
+        //a < b < c case:
+        if (theData[begin].compareTo(theData[middle]) < 0 && theData[middle].compareTo(theData[end]) < 0) {
             // b < m < e -> swap b and m
             swap(theData, begin, middle);
-        } 
-        else if(theData[begin].compareTo(theData[end]) < 0 && theData[end].compareTo(theData[middle]) < 0){
+        } //a < c < b case:
+        else if (theData[begin].compareTo(theData[end]) < 0 && theData[end].compareTo(theData[middle]) < 0) {
             swap(theData, begin, end);
-        }
-        /*
+        } /*
+        //b < a < c case:
         else if(theData[middle].compareTo(theData[begin]) < 0 && theData[begin].compareTo(theData[end]) < 0){
             //do nothing
         }
+        //c < a < b case:
         else if(theData[end].compareTo(theData[begin]) < 0 && theData[begin].compareTo(theData[middle]) < 0){
             //do nothing
         }
-        */
-        else if(theData[middle].compareTo(theData[end]) < 0 && theData[end].compareTo(theData[begin]) < 0){
+         */ //b < c < a case:
+        else if (theData[middle].compareTo(theData[end]) < 0 && theData[end].compareTo(theData[begin]) < 0) {
             swap(theData, begin, end);
-        }
-        else if(theData[end].compareTo(theData[middle]) < 0 && theData[middle].compareTo(theData[begin]) < 0){
+        } //c < b < a case:
+        else if (theData[end].compareTo(theData[middle]) < 0 && theData[middle].compareTo(theData[begin]) < 0) {
             swap(theData, middle, begin);
         }
     }
