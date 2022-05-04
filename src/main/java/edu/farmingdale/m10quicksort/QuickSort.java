@@ -22,75 +22,80 @@ public class QuickSort<T extends Comparable<T>> implements SortTestable<T> {
     }
 
     /**
-     * use the quicksort algorithm to sort the array between firstIndex
-     * and lastIndex (inclusive)
+     * use the quicksort algorithm to sort the array between firstIndex and
+     * lastIndex (inclusive)
+     *
      * @param theData The array
      * @param firstIndex The first index of the portion of the array to sort
      * @param lastIndex The last index of the portion of the array to sort
      */
     private void quickSort(T theData[], int firstIndex, int lastIndex) {
-        
-        if(firstIndex < lastIndex){
-            int pi = partition(theData, firstIndex, lastIndex);
-            quickSort(theData, firstIndex, pi - 1);
-            quickSort(theData, pi + 1, lastIndex);
+
+        if (firstIndex < lastIndex) {
+            
+            int partiton = partition(theData, firstIndex, lastIndex);
+            quickSort(theData, firstIndex, partiton - 1);
+            quickSort(theData, partiton + 1, lastIndex);
         }
-        
-        
+
     } // quickSort()
 
-    private int partition(T theData[], int low, int high){
+ private int partition(T theData[], int firstIndex, int lastIndex)
+    {
+        T pivot = theData[firstIndex];
+        int firstBig = firstIndex;
+        for (int i = firstIndex; i <= lastIndex; i++)
+        {
+            if(pivot.compareTo(theData[i]) >= 0 )
+            {
+                swap(theData, firstBig, i);
+                firstBig++;
+                
+                
+            } 
+        } 
+       
+        swap(theData, firstBig - 1,firstIndex);
+       
         
-      T pivot = theData[low];
-      int first = low + 1;
-      int last = high;
-      
-      while(first > last){
-          while(first <= last && (theData[first].compareTo(pivot) <= 0)){
-              low++;
-          }
-          while(low <= high && (theData[last].compareTo(pivot) >0)){
-              high--;
-          }
-          
-          if(last > first){
-              T temp = theData[last];
-             theData[last] = theData[first];
-        theData[first] = temp;
-          }
-      }
-      
-      while(first > high && (theData[last].compareTo(pivot) >= 0)){
-          high--;
-      }
-      if(pivot.compareTo(theData[last]) > 0){
-          theData[low] = theData[last];
-          theData[last] = pivot;
-          return last;
-      } else {
-          return low;
-      }
         
-        /*
-        T pivot = theData[high];
-        int i = (low - 1);
+        return firstBig-1;//what to return ;
         
-        for(int j = low; j <= high - 1; j++){
-            if(theData[j].compareTo(pivot) < 0){
-                i++;
-                swap(theData, i, j);
-            }
-        }
-        swap(theData, i+1, high);
-        return (i + 1);
-        */
     }
-    
-    private void swap(T theData[], int i, int j){
+
+    private void swap(T theData[], int i, int j) {
         T temp = theData[i];
         theData[i] = theData[j];
         theData[j] = temp;
     }
+
+    private void median(T theData[], int begin, int end) {
+        
+        int middle = (begin + end) / 2;
+        
+        if(theData[begin].compareTo(theData[middle]) < 0 && theData[middle].compareTo(theData[end]) < 0){
+            // b < m < e -> swap b and m
+            swap(theData, begin, middle);
+        } 
+        else if(theData[begin].compareTo(theData[end]) < 0 && theData[end].compareTo(theData[middle]) < 0){
+            swap(theData, begin, end);
+        }
+        /*
+        else if(theData[middle].compareTo(theData[begin]) < 0 && theData[begin].compareTo(theData[end]) < 0){
+            //do nothing
+        }
+        else if(theData[end].compareTo(theData[begin]) < 0 && theData[begin].compareTo(theData[middle]) < 0){
+            //do nothing
+        }
+        */
+        else if(theData[middle].compareTo(theData[end]) < 0 && theData[end].compareTo(theData[begin]) < 0){
+            swap(theData, begin, end);
+        }
+        else if(theData[end].compareTo(theData[middle]) < 0 && theData[middle].compareTo(theData[begin]) < 0){
+            swap(theData, middle, begin);
+        }
+    }
+
     /**
      * Public sort() method. Calls quicksort.
      */
